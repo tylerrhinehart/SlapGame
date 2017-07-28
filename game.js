@@ -22,6 +22,17 @@ function Item(name, modifier, description) {
     this.description = description
 }
 
+function Attacks(name, strength){
+    this.name = name
+    this.strength = strength
+}
+
+var attacks = {
+    scissors: new Attacks('scissors', 1),
+    handSaw: new Attacks('handSaw', 5),
+    chainSaw: new Attacks('chainSaw', 10)
+}
+
 var items = {
     metalBark: new Item('Metal Bark', .3, 'Gives the tree metal bark and makes your tools less effective'),
     diamondTools: new Item('Diamond tools', 3, 'Makes your tools much stronger'),
@@ -55,9 +66,9 @@ function draw(arr) {
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <button type="button" onclick="scissors(${target.id}), health(${target.id})">Scissors</button>
-                        <button type="button" onclick="handSaw(${target.id}), health(${target.id})">Hand Saw</button>
-                        <button type="button" onclick="chainSaw(${target.id}), health(${target.id})">Chain Saw</button>
+                        <button type="button" onclick="attack(${target.id}, 'scissors')">Scissors</button>
+                        <button type="button" onclick="attack(${target.id}, 'handSaw')">Hand Saw</button>
+                        <button type="button" onclick="attack(${target.id}, 'chainSaw')">Chain Saw</button>
                     </div>
                 </div>
                 <div class="row">
@@ -90,33 +101,37 @@ function calcMods(tarId) {
     }
     return total
 }
-function attack(tarId, type){
-
-
-}
-function scissors(tarId) {
+function attack(tarId, tool){
     var tar = findTargetById(targets, tarId)
-    tar.health -= 1 * calcMods(tarId)
-    tar.cuttingActions++
+    var damage = attacks[tool].strength
+    tar.health -= damage * calcMods(tarId)
+    tar.cuttingActions++  
     health(tarId)
     draw(targets)
 }
+// function scissors(tarId) {
+//     var tar = findTargetById(targets, tarId)
+//     tar.health -= 1 * calcMods(tarId)
+//     tar.cuttingActions++
+//     health(tarId)
+//     draw(targets)
+// }
 
-function handSaw(tarId) {
-    var tar = findTargetById(targets, tarId)
-    tar.health -= 5 * calcMods(tarId)
-    tar.cuttingActions++
-    health(tarId)
-    draw(targets)
-}
+// function handSaw(tarId) {
+//     var tar = findTargetById(targets, tarId)
+//     tar.health -= 5 * calcMods(tarId)
+//     tar.cuttingActions++
+//     health(tarId)
+//     draw(targets)
+// }
 
-function chainSaw(tarId) {
-    var tar = findTargetById(targets, tarId)
-    tar.health -= 10 * calcMods(tarId)
-    tar.cuttingActions++
-    health(tarId)
-    draw(targets)
-}
+// function chainSaw(tarId) {
+//     var tar = findTargetById(targets, tarId)
+//     tar.health -= 10 * calcMods(tarId)
+//     tar.cuttingActions++
+//     health(tarId)
+//     draw(targets)
+// }
 
 function findTargetById(tarArr, tarId) {
     for (var i = 0; i < tarArr.length; i++) {
