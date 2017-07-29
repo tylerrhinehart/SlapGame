@@ -22,7 +22,7 @@ function Item(name, modifier, description) {
     this.description = description
 }
 
-function Attacks(name, strength){
+function Attacks(name, strength) {
     this.name = name
     this.strength = strength
 }
@@ -101,13 +101,20 @@ function calcMods(tarId) {
     }
     return total
 }
-function attack(tarId, tool){
+function attack(tarId, tool) {
     var tar = findTargetById(targets, tarId)
     var damage = attacks[tool].strength
-    tar.health -= damage * calcMods(tarId)
-    tar.cuttingActions++  
-    health(tarId)
-    draw(targets)
+    if (tar.cuttingActions % 3 == 2) {
+        alert('Tree grew and gained health')
+        tar.health += 5
+        tar.cuttingActions++
+        draw(targets)
+    } else {
+        tar.health -= damage * calcMods(tarId)
+        tar.cuttingActions++
+        health(tarId)
+        draw(targets)
+    }
 }
 // function scissors(tarId) {
 //     var tar = findTargetById(targets, tarId)
