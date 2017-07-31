@@ -1,5 +1,22 @@
 var id = 1
 
+var targets = []
+
+var tar1 = new Target('Mr. Tree')
+targets.push(tar1)
+
+var items = {
+    metalBark: new Item('Metal Bark', .3, 'Gives the tree metal bark and makes your tools less effective'),
+    diamondTools: new Item('Diamond tools', 3, 'Makes your tools much stronger'),
+    steroids: new Item('Steroids', 1.5, 'Makes your stronger so your tools are slightly more effective')
+}
+
+var attacks = {
+    scissors: new Attacks('scissors', 1),
+    handSaw: new Attacks('handSaw', 5),
+    chainSaw: new Attacks('chainSaw', 10)
+}
+
 function Target(name) {
     this.id = id
     this.name = name
@@ -11,11 +28,6 @@ function Target(name) {
     id++
 }
 
-var targets = []
-
-var tar1 = new Target('Mr. Tree')
-targets.push(tar1)
-
 function Item(name, modifier, description) {
     this.name = name
     this.modifier = modifier
@@ -25,18 +37,6 @@ function Item(name, modifier, description) {
 function Attacks(name, strength) {
     this.name = name
     this.strength = strength
-}
-
-var attacks = {
-    scissors: new Attacks('scissors', 1),
-    handSaw: new Attacks('handSaw', 5),
-    chainSaw: new Attacks('chainSaw', 10)
-}
-
-var items = {
-    metalBark: new Item('Metal Bark', .3, 'Gives the tree metal bark and makes your tools less effective'),
-    diamondTools: new Item('Diamond tools', 3, 'Makes your tools much stronger'),
-    steroids: new Item('Steroids', 1.5, 'Makes your stronger so your tools are slightly more effective')
 }
 
 function draw(arr) {
@@ -53,7 +53,7 @@ function draw(arr) {
             `
             <div class="row">
                 <div class="col-xs-12">
-                    <img id="tree-pic" src="${target.images[image]}" alt="animated tree">
+                    <img id="tree-pic${target.id}" src="${target.images[image]}" alt="animated tree">
                 </div>
             </div>
             <div>
@@ -61,6 +61,10 @@ function draw(arr) {
                     <div class="col-xs-12">
                         <h3>Name: <span id="tree-name">${target.name}</span></h3>
                         <h3>Health: <span id="tree-health">${target.health}</span></h3>
+                        <div class="progress" id="health-PB">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="${target.health}" aria-valuemin="0" aria-valuemax="100" style="width: ${target.health}%;">
+                            </div>
+                        </div>
                         <h3>Cutting Actions: <span id="tree-cuttingActions">${target.cuttingActions}</span></h3>
                     </div>
                 </div>
@@ -73,9 +77,9 @@ function draw(arr) {
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <button type="button" onclick="addMods('metalBark',${target.id})">Metal Bark</button>
-                        <button type="button" onclick="addMods('diamondTools',${target.id})">Diamond Tools</button>
-                        <button type="button" onclick="addMods('steroids',${target.id})">Steroids</button>
+                        <button type="button" onclick="addMods(${target.id}, 'metalBark')">Metal Bark</button>
+                        <button type="button" onclick="addMods(${target.id}, 'diamondTools')">Diamond Tools</button>
+                        <button type="button" onclick="addMods(${target.id}, 'steroids')">Steroids</button>
                     </div>
                 </div>
             </div>
@@ -84,9 +88,25 @@ function draw(arr) {
     document.getElementById('tree').innerHTML = template
 }
 
-function addMods(item, tarId) {
+// function addButton(obj, funcName, targetId){
+//     var props = Object.keys(obj)
+//     var btnTemplate = ''
+//     for(var i = 0; i < props.length; i++){
+//         tarId = targetId
+//         specific = props[i]
+//         btnTemplate += `
+
+//             <button type="button" onclick="${funcName}(${tarId}, ${specific})">${props[i]}</button>
+
+//         `
+//     }
+//     return btnTemplate
+// }
+
+
+function addMods(tarId, specific) {
     var tar = findTargetById(targets, tarId)
-    var mod = items[item].modifier
+    var mod = items[specific].modifier
     tar.mods.push(mod)
 }
 
@@ -101,9 +121,11 @@ function calcMods(tarId) {
     }
     return total
 }
-function attack(tarId, tool) {
+
+// var attackFunc = attack(tarId, specific)
+function attack(tarId, specific) {
     var tar = findTargetById(targets, tarId)
-    var damage = attacks[tool].strength
+    var damage = attacks[specific].strength
     if (tar.cuttingActions % 3 == 2) {
         alert('Tree grew and gained health')
         tar.health += 5
@@ -114,6 +136,7 @@ function attack(tarId, tool) {
         tar.cuttingActions++
         health(tarId)
         draw(targets)
+        animate()
     }
 }
 // function scissors(tarId) {
@@ -152,9 +175,20 @@ function findTargetById(tarArr, tarId) {
 function health(tarId) {
     var tar = findTargetById(targets, tarId)
     if (tar.health < 0) {
+        alert('You chopped down the tree')
         return tar.health = 0
     }
 }
 
+// function animate(tarId){
+//     var elem = document.getElementById(`tree-pic${tarId}`)
+//     var pos = 0
+//     var time = setInterval(jiggle, 10)
+//     function jiggle(){
+//         elem.style.left = pos + '10px'
+//         elem.style.right = pos - '20px'
+//         elem.style.left = pos + '10px'
+//     }
+// }
 
 draw(targets)
