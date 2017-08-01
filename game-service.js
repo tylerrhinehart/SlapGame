@@ -1,5 +1,7 @@
 function GameService() {
 
+    var gameService = this
+
     var id = 1
 
     var targets = []
@@ -67,18 +69,30 @@ function GameService() {
         return total
     }
 
-    function health(tarId) {
-        var tar = findTargetById(targets, tarId)
+    function health(tar) {
         if (tar.health < 0) {
             alert('You chopped down the tree')
             return tar.health = 0
         }
     }
 
-    this.addMods = function addMods(tarId, specific) {
+    function slapPlayer(tar) {
+        if (tar.cuttingActions == 7) {
+            alert('You Lose! The tree gained consciousness and broke all your tools with its tree powers')
+            gameService.reset(tar.id)
+        }
+    }
+
+    this.addMods = function addMods(tarId, specific, cb) {
         var tar = findTargetById(targets, tarId)
-        var mod = items[specific].modifier
-        tar.mods.push(mod)
+        if (tar.mods.length > 2) {
+            alert('You can only equip 3 items')
+            return
+        } else {
+            var mod = items[specific].modifier
+            tar.mods.push(mod)
+            cb(items[specific], tarId)
+        }
     }
 
     this.attack = function attack(tarId, specific) {
@@ -91,12 +105,13 @@ function GameService() {
         } else {
             tar.health -= damage * calcMods(tarId)
             tar.cuttingActions++
-            health(tarId)
+            slapPlayer(tar)
+            health(tar)
         }
         return JSON.parse(JSON.stringify(tar))
     }
 
-    this.reset = function reset(tarId){
+    this.reset = function reset(tarId) {
         var tar = findTargetById(targets, tarId)
         tar.health = 100
         tar.cuttingActions = 0
