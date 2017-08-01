@@ -48,6 +48,11 @@ function GameController() {
                         <button type="button" onclick="app.controllers.gameController.giveMod(${target.id}, 'steroids')">Steroids</button>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <button type="button" onclick="app.controllers.gameController.reset(${target.id}, 'metalBark')">Reset Game</button>
+                    </div>
+                </div>
             </div>
     `
         }
@@ -61,6 +66,11 @@ function GameController() {
 
     this.giveMod = function giveMod(tarId, specific) {
         gameService.addMods(tarId, specific)
+        draw()
+    }
+
+    this.reset = function reset(tarId){
+        gameService.reset(tarId)
         draw()
     }
 

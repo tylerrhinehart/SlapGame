@@ -96,4 +96,11 @@ function GameService() {
         return JSON.parse(JSON.stringify(tar))
     }
 
+    this.reset = function reset(tarId){
+        var tar = findTargetById(targets, tarId)
+        tar.health = 100
+        tar.cuttingActions = 0
+        tar.mods = []
+    }
+
 }
