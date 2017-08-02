@@ -2,6 +2,7 @@ function GameController() {
 
     var gameService = new GameService()
     var itemTemplate = ''
+    var modsId = 0
 
     function draw() {
 
@@ -76,15 +77,22 @@ function GameController() {
     }
 
     function drawMods(obj, tarId) {
+        var targetArr = gameService.getTarget()
+        var tar = targetArr[tarId - 1]
         var tableId = 'mod-table-' + tarId
-        console.log(obj)
-        itemTemplate += `
-        <tr>
-            <td>${obj.name}</td>
-            <td>${obj.modifier}</td>
-        </tr>
-        `
-        document.getElementById(tableId).innerHTML = itemTemplate
+        if (tar.mods[modsId] != undefined) {
+            itemTemplate += `
+                    <tr>
+                        <td>${tar.mods[modsId].name}</td>
+                        <td>${tar.mods[modsId].modifier}</td>
+                    </tr>
+                `
+            document.getElementById(tableId).innerHTML = itemTemplate
+            modsId++
+        }
+        else {
+            return
+        }
     }
 
     this.attackTarget = function attackTarget(tarId, specific) {
@@ -98,6 +106,7 @@ function GameController() {
 
     this.reset = function reset(tarId) {
         itemTemplate = ''
+        modsId = 0
         gameService.reset(tarId)
         draw()
     }
