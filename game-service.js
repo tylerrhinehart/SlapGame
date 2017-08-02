@@ -25,7 +25,7 @@ function GameService() {
         this.id = id
         this.name = name
         this.health = 100
-        this.cuttingActions = 0
+        this.cutts = 0
         this.mods = []
         this.images = ['https://openclipart.org/image/2400px/svg_to_png/263892/Colorful-Natural-Tree.png', 'http://diysolarpanelsv.com/images/clipart-fallen-tree-1.png']
 
@@ -64,7 +64,7 @@ function GameService() {
             return total = 1
         }
         for (var i = 0; i < tar.mods.length; i++) {
-            total += tar.mods[i]
+            total += tar.mods[i].modifier
         }
         return total
     }
@@ -76,10 +76,11 @@ function GameService() {
         }
     }
 
-    function slapPlayer(tar) {
-        if (tar.cuttingActions == 7) {
+    function slapPlayer(tar, cb1, cb2) {
+        if (tar.cutts == 7) {
             alert('You Lose! The tree gained consciousness and broke all your tools with its tree powers')
-            gameService.reset(tar.id)
+            cb2(tar.id)
+            cb1(tar, tar.id)
         }
     }
 
@@ -89,23 +90,23 @@ function GameService() {
             alert('You can only equip 3 items')
             return
         } else {
-            var mod = items[specific].modifier
+            var mod = items[specific]
             tar.mods.push(mod)
             cb(items[specific], tarId)
         }
     }
 
-    this.attack = function attack(tarId, specific) {
+    this.attack = function attack(tarId, specific, cb1, cb2) {
         var tar = findTargetById(targets, tarId)
         var damage = attacks[specific].strength
-        if (tar.cuttingActions % 3 == 2) {
+        if (tar.cutts % 3 == 2) {
             alert('Tree grew and gained health')
             tar.health += 5
-            tar.cuttingActions++
+            tar.cutts++
         } else {
             tar.health -= damage * calcMods(tarId)
-            tar.cuttingActions++
-            slapPlayer(tar)
+            tar.cutts++
+            slapPlayer(tar, cb1, cb2)
             health(tar)
         }
         return JSON.parse(JSON.stringify(tar))
@@ -114,7 +115,7 @@ function GameService() {
     this.reset = function reset(tarId) {
         var tar = findTargetById(targets, tarId)
         tar.health = 100
-        tar.cuttingActions = 0
+        tar.cutts = 0
         tar.mods = []
     }
 
