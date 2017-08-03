@@ -18,7 +18,12 @@
         </div>
     </section>
     <section class="content" id="tree">
-
+        <form class="form-inline" onsubmit="app.controllers.gameController.setTarget(event)">
+            <div class="form-group">
+                <input type="text" class="form-control" name="tree" placeholder="Tree Name" />
+                <button type="submit" class="btn btn-primary" id="tree-name-button">Start Game</button>
+            </div>
+        </form>
         
 
     </section>

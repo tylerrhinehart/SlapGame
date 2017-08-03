@@ -2,6 +2,7 @@ function GameController() {
 
     var gameService = new GameService()
     var itemTemplate = ''
+    var buttonsTemplate = ''
     var modsId = 0
 
     function draw() {
@@ -76,6 +77,14 @@ function GameController() {
         document.getElementById('tree').innerHTML = template
     }
 
+    // function drawButtons(){
+    //     var items = Object.Key(gameService.getItems())
+    //     for(var i = 0; i < items.length; i++) {
+    //         buttonsTemplate += 
+    //         "<button type="button" onclick="app.controllers.gameController.giveMod(${target.id}, 'metalBark')">Metal Bark</button>"
+    //     }
+    // }
+
     function drawMods(obj, tarId) {
         var targetArr = gameService.getTarget()
         var tar = targetArr[tarId - 1]
@@ -112,12 +121,14 @@ function GameController() {
     }
     var cbReset = this.reset
 
-    // Callback function for reset function in servie so that table clears when you win or lose
-    this.clearItemTemplate = function clearItemTemplate() {
-        itemTemplate = ''
-    }
+     this.setTarget = function(e) {
+         console.log(e.target.tree.value)
+         var tarName = e.target.tree.value
+         gameService.setTarget(tarName)
+         draw()
+     }
 
 
-    draw()
+    // draw()
 
 }

@@ -6,8 +6,8 @@ function GameService() {
 
     var targets = []
 
-    var tar1 = new Target('Mr. Tree')
-    targets.push(tar1)
+    // var tar1 = new Target('Mr. Tree')
+    // targets.push(tar1)
 
     var items = {
         metalBark: new Item('Metal Bark', .3, 'Gives the tree metal bark and makes your tools less effective'),
@@ -52,10 +52,20 @@ function GameService() {
         }
     }
 
+    this.setTarget = function(name) {
+        var target = new Target(name)
+        targets.push(target)
+    }
+
     this.getTarget = function getTarget() {
         var targetCopy = JSON.parse(JSON.stringify(targets))
         return targetCopy
     }
+
+    // this.getItems = function getItems() {
+    //     var itemsCopy = JSON.parse(JSON.stringify(items))
+    //     return itemsCopy
+    // }
 
     function calcMods(tarId) {
         var tar = findTargetById(targets, tarId)
